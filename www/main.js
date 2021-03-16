@@ -51,10 +51,16 @@ function init() {
 		layers: 'KB_Geology'
 	});
 	var usgsGeologyLayer = L.tileLayer.wms('https://mrdata.usgs.gov/services/kb?', {
-		layers: 'Geology'
+		layers: 'Geology', opacity: 0.5
 	});
 	var usgsFaultsLayer = L.tileLayer.wms('https://mrdata.usgs.gov/services/kb?', {
-		layers: 'Faults'
+		layers: 'Faults', opacity: 0.4
+	});
+	var varNOAARadarLayer = L.tileLayer.wms('https://opengeo.ncep.noaa.gov/geoserver/conus/conus_bref_qcd/ows?', {
+		layers: 'conus_bref_qcd', format: "image/png", transparent: true, opacity: 0.6
+	});
+	var varNOAAWarningsLayer = L.tileLayer.wms('https://opengeo.ncep.noaa.gov/geoserver/wwa/warnings/ows?', {
+		layers: 'warnings', format: "image/png", transparent: true
 	});
 
 	// Fossil site overlay
@@ -66,9 +72,9 @@ function init() {
 		layers: [osmBaseMap, fossilLocalities]
 	});
 
-	var baseMaps = { "Standard": osmBaseMap, "Esri World Imagery": esriWorldImageryMap, "Esri World Topo": esriWorldTopoMap, "Open Topo": osmTopoMap, "USGS Topo": usgsUSTopo, "USGS - KB Geology": usgsKBGeologyLayer, "USGS - Geology": usgsGeologyLayer, "USGS - Faults": usgsFaultsLayer };
+	var baseMaps = { "Standard": osmBaseMap, "Esri World Imagery": esriWorldImageryMap, "Esri World Topo": esriWorldTopoMap, "Open Topo": osmTopoMap, "USGS Topo": usgsUSTopo };
 
-	var overlayMaps = { "Fossil Hunting Localities": fossilLocalities };
+	var overlayMaps = { "Fossil Hunting Localities": fossilLocalities, "USGS - Geology": usgsGeologyLayer, "USGS - Faults": usgsFaultsLayer, "NOAA Radar": varNOAARadarLayer, "Weather Warnings": varNOAAWarningsLayer };
 
 	L.control.layers(baseMaps, overlayMaps).addTo(map);
 
