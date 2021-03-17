@@ -1,5 +1,7 @@
 "use strict";
 
+var map;
+
 function getMarker(textDisplay, latitude, longitude, displayIcon) {
 	var content = "<h2>" + textDisplay + "</h2>"
 		+ "<p><a target='_blank' rel='noopener noreferrer' href='https://maps.google.com/maps?ll=" + latitude + "," + longitude + "&q=" + latitude + "," + longitude + "&hl=en&t=m&z=12'>Google Maps</a></p>";
@@ -23,6 +25,12 @@ function loadFossilLocalities(markerIcon) {
 	});
 
 	return fossilLocalities;
+}
+
+function onLocationFound(e) {
+	var radius = e.accuracy * 3.28084;
+
+	L.marker(e.latlng).addTo(map).bindTooltip("You are within " + radius + " feet from this point");
 }
 
 function init() {
@@ -66,7 +74,7 @@ function init() {
 	// Fossil site overlay
 	var fossilLocalities = loadFossilLocalities(pickaxeIcon);
 
-	var map = L.map('map', {
+	map = L.map('map', {
 		center: [39.744018, -84.636640],
 		zoom: 8,
 		layers: [osmBaseMap, fossilLocalities]
@@ -79,4 +87,8 @@ function init() {
 	L.control.layers(baseMaps, overlayMaps).addTo(map);
 
 	L.control.scale().addTo(map);
+
+	map.locate({ setView: true, maxZoom: 8 });
+
+	map.on('locationfound', onLocationFound);
 }
