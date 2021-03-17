@@ -1,6 +1,7 @@
 "use strict";
 
 var map;
+var geoLayerLegend;
 
 function getMarker(textDisplay, latitude, longitude, displayIcon) {
 	var content = "<h2>" + textDisplay + "</h2>"
@@ -28,9 +29,13 @@ function loadFossilLocalities(markerIcon) {
 }
 
 function onLocationFound(e) {
-	var radius = e.accuracy * 3.28084;
+	var radius = Math.round(e.accuracy * 3.28084);
 
 	L.marker(e.latlng).addTo(map).bindTooltip("You are within " + radius + " feet from this point");
+}
+
+function legendSegment(name, color) {
+	return '<i style="background:' + color + '"></i> ' + name + '<br>';
 }
 
 function init() {
@@ -54,9 +59,6 @@ function init() {
 	var usgsUSTopo = L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}', {
 		maxZoom: 20,
 		attribution: 'Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>'
-	});
-	var usgsKBGeologyLayer = L.tileLayer.wms('https://mrdata.usgs.gov/services/kb?', {
-		layers: 'KB_Geology'
 	});
 	var usgsGeologyLayer = L.tileLayer.wms('https://mrdata.usgs.gov/services/kb?', {
 		layers: 'Geology', opacity: 0.5
@@ -88,7 +90,34 @@ function init() {
 
 	L.control.scale().addTo(map);
 
+	geoLayerLegend = L.control({ position: 'bottomright' });
+	geoLayerLegend.onAdd = function (map) {
+		var div = L.DomUtil.create('div', 'info legend');
+
+		div.innerHTML +=
+			legendSegment('Middle Ordovician (470 - 458 mya)', '#eb5cb6') +
+			legendSegment('Upper Ordovician (458 - 443 mya)', '#ffa5a5') +
+			legendSegment('Silurian (443 - 419 mya)', '#bb00ff') +
+			legendSegment('Devonian (419 - 358 mya)', '#aea5fe') +
+			legendSegment('Mississipian (358 - 323 mya)', '#a5faff') +
+			legendSegment('Missourian', '#a5a5a5');
+
+		return div;
+	};
+
+	map.on('overlayadd', function (eventLayer) {
+		if (eventLayer.name == 'USGS - Geology') {
+			geoLayerLegend.addTo(this);
+		}
+	});
+	map.on('overlayremove', function (eventLayer) {
+		if (eventLayer.name == 'USGS - Geology') {
+			this.removeControl(geoLayerLegend);
+		}
+	});
+
 	map.locate({ setView: true, maxZoom: 8 });
 
 	map.on('locationfound', onLocationFound);
 }
+
