@@ -115,7 +115,8 @@ function init() {
 			legendSegment('Silurian (443 - 419 mya)', '#bb00ff') +
 			legendSegment('Devonian (419 - 358 mya)', '#aea5fe') +
 			legendSegment('Mississipian (358 - 323 mya)', '#a5faff') +
-			legendSegment('Missourian', '#a5a5a5');
+			legendSegment('Missourian', '#a5a5a5') +
+			legendSegment('Eocene (56 - 34 mya)', '#ffad01')
 
 		return div;
 	};
