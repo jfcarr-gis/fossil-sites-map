@@ -3,9 +3,24 @@
 var map;
 var geoLayerLegend;
 
-function getMarker(textDisplay, latitude, longitude, displayIcon) {
-	var content = "<h2>" + textDisplay + "</h2>"
-		+ "<p><a target='_blank' rel='noopener noreferrer' href='https://maps.google.com/maps?ll=" + latitude + "," + longitude + "&q=" + latitude + "," + longitude + "&hl=en&t=m&z=12'>Google Maps</a></p>";
+function getMarker(textDisplay, state, latitude, longitude, website, notes, displayIcon) {
+	var content = "<h2>" + textDisplay + "</h2>";
+
+	content += "<p>" + state + "<p>";
+
+	content += "<hr>";
+
+	if (!website == '') {
+		content += "<p><a target='_blank' href='" + website + "'>Website</a></p>";
+	}
+
+	content += "<p><a target='_blank' rel='noopener noreferrer' href='https://maps.google.com/maps?ll=" + latitude + "," + longitude + "&q=" + latitude + "," + longitude + "&hl=en&t=m&z=12'>Google Maps</a></p>";
+
+	if (!notes == '') {
+		content +=
+			"<hr>" +
+			"<p>" + notes + "</p>";
+	}
 
 	var newMarker = L.marker([latitude, longitude], { icon: displayIcon, alt: textDisplay });
 	newMarker.bindPopup(content);
@@ -19,7 +34,7 @@ function loadFossilLocalities(markerIcon) {
 
 	$.getJSON("get_sites.php", function (data) {
 		for (var i = 0; i < data.length; i++) {
-			var newMarker = getMarker(data[i].description, data[i].latitude, data[i].longitude, markerIcon);
+			var newMarker = getMarker(data[i].description, data[i].state, data[i].latitude, data[i].longitude, data[i].website, data[i].notes, markerIcon);
 
 			newMarker.addTo(fossilLocalities);
 		}
@@ -77,8 +92,8 @@ function init() {
 	var fossilLocalities = loadFossilLocalities(pickaxeIcon);
 
 	map = L.map('map', {
-		center: [39.744018, -84.636640],
-		zoom: 8,
+		center: [40.498285, -96.898910],
+		zoom: 5,
 		layers: [osmBaseMap, fossilLocalities]
 	});
 
@@ -116,7 +131,7 @@ function init() {
 		}
 	});
 
-	map.locate({ setView: true, maxZoom: 8 });
+	map.locate({ setView: true, maxZoom: 7 });
 
 	map.on('locationfound', onLocationFound);
 }
