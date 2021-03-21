@@ -1,6 +1,19 @@
 # Fossil Sites Map
 
-Map of fossil hunting localities.  Location data is stored in a SQLite database, and the map is rendered using Leaflet.js.  See it in action [here](https://fossilsites.goodguyscience.com/).
+Map of fossil hunting localities, built with [Leaflet.js](https://leafletjs.com/).  Provides several base and overlay layers, including regular maps, satellite imagery, topographical data, geographical/strata information, and weather.  See it in action [here](https://fossilsites.goodguyscience.com/).
+
+## What It Uses
+
+In addition to Leaflet.js, the project uses the following:
+
+Name | How It's Used
+---------|----------
+JavaScript | Everywhere, obviously: Leaflet is a JavaScript library.  :-)
+[WMS (Web Map Service)](https://www.ogc.org/standards/wms) | In addition to the layers implemented using native Leaflet providers, several WMS sources are leveraged as well.
+CSS | Custom styling to make the map more mobile-friendly.
+SQLite | Stores site information (geographical coordinates, notes, etc)
+PHP | Employed in an AJAX call to retrieve data from the SQLite database.
+jQuery | Actually makes the AJAX call to the PHP script (for the database).
 
 ## Deployment
 
